@@ -1,11 +1,95 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculo progressivo</title>
+    <title>Cálculo de Desconto</title>
+
+    <link href="https://jsdelivr.net" rel="stylesheet">
 </head>
-<body>
-    
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3>Formulário de Cálculo</h3>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <% if (erros && erros.length > 0) { %>
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    <% erros.forEach(function(erro) { %>
+                                        <li><%= erro.msg %></li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                        <% } %>
+
+               
+                        <form action="/calcular" method="POST">
+                            
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="nome" name="nome" value="<%= resultado ? resultado.nome : '' %>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cpf" class="form-label">CPF (somente números)</label>
+                                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="00000000000" value="<%= resultado ? resultado.cpf : '' %>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="valor" class="form-label">Valor (R$)</label>
+                                <input type="number" step="0.01" class="form-control" id="valor" name="valor" value="<%= resultado ? resultado.valor : '' %>">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Calcular Desconto</button>
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- Bloco de Exibição do Resultado (Só aparece se o cálculo der certo) -->
+                <% if (resultado) { %>
+                    <div class="card mt-4 shadow border-success">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="card-title mb-0 text-center">Resultado do Cálculo</h4>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Contribuinte:</strong> <%= resultado.nome %></p>
+                            <p><strong>CPF:</strong> <%= resultado.cpf %></p>
+                            
+                            <table class="table table-bordered mt-3">
+                                <tbody>
+                                    <tr>
+                                        <th>Valor Original</th>
+                                        <td>R$ <%= resultado.valor.toFixed(2) %></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Percentual aplicado</th>
+                                        <td><span class="badge bg-info text-dark"><%= resultado.percentual %>%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Valor do Desconto</th>
+                                        <td class="text-danger">- R$ <%= resultado.desconto.toFixed(2) %></td>
+                                    </tr>
+                                    <tr class="table-active">
+                                        <th>Valor Final</th>
+                                        <td class="text-success class-total"><strong>R$ <%= resultado.valorFinal.toFixed(2) %></strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <% } %>
+
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
